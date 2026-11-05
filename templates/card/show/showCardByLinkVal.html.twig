@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ cards.name }}{% endblock %}
+
+{% block body %}
+    <h1>{{ cards.name }}</h1>
+    <img src="{{ cards.card_images[0].image_url }}" alt="{{ cards.name }}">
+    <p>{{ cards.desc }}</p>
+
+{% endblock %}

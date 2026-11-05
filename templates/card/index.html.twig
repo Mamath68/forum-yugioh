@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Les Cartes{% endblock %}
+
+{% block body %}
+    <div class="row g-3">
+        {% for card in cards %}
+            {% set type = card.type %}
+
+            {% if card.type == "Spell Card" or card.type == "Trap Card" %}
+                {% set type = card.race ~ " " ~ card.type %}
+            {% endif %}
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <div class="card h100 my-3">
+                    <div class="card-header">
+                        <a href="{{ path("app_card", {id: card.id}) }}" class="card-title h5">
+                            {{ card.name }}
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <img src="{{ card.card_images[0].image_url }}" class="card-img img-fluid" alt="{{ card.name }}"
+                             title="{{ card.name }}">
+                    </div>
+                    <div class="card-footer">
+                        <h2 class="h5">{{ type }}</h2>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
