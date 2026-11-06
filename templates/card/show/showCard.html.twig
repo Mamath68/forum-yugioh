@@ -1,10 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ card.name }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
     <h1>{{ card.name }}</h1>
-    <img src="{{ card.card_images[0].image_url }}" alt="{{ card.name }}" title="{{ card.name }}" >
+    {% if card.type == "Link Monster" %}
+        <a class="h5" href="{{ path("app_link", {linkval: card.linkval}) }}">Lien: {{ card.linkval }}</a>
+        <a class="h5" href="{{ path("app_atk", {atk: card.atk}) }}">Attaque: {{ card.atk }}</a>
+    {% elseif "Pendulum" in card.type %}
+        <a class="h5" href="{{ path("app_scale", {scale: card.scale}) }}">Echelle Pendule: {{ card.scale }}</a>
+        <a class="h5" href="{{ path("app_level", {level: card.level}) }}">Niveau: {{ card.level }}</a>
+        <a class="h5" href="{{ path("app_atk", {atk: card.atk}) }}">Attaque: {{ card.atk }}</a>
+        <a class="h5" href="{{ path("app_def", {def: card.def}) }}">Défense: {{ card.def }}</a>
+    {% elseif "Monster" in card.type %}
+        <a class="h5" href="{{ path("app_level", {level: card.level}) }}">Niveau: {{ card.level }}</a>
+        <a class="h5" href="{{ path("app_atk", {atk: card.atk}) }}">Attaque: {{ card.atk }}</a>
+        <a class="h5" href="{{ path("app_def", {def: card.def}) }}">Défense: {{ card.def }}</a>
+    {% endif %}
+    {% if card.archetype is defined %}
+        <a class="h5" href="{{ path("app_archetype", {archetype: card.archetype}) }}">Archétype: {{ card.archetype }}</a>
+    {% endif %}
+    {% if card.attribute is defined %}
+        <a class="h5" href="{{ path("app_attribute", {attribute: card.attribute}) }}">Attribut: {{ card.attribute }}</a>
+    {% endif %}
+    <img src="{{ card.card_images[0].image_url }}" alt="{{ card.name }}" title="{{ card.name }}">
     <p>{{ card.desc }}</p>
 
 {% endblock %}
