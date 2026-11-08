@@ -3,9 +3,10 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-    {% if app.user %}
-        <h1>Bienvenu {{ app.user.username }}
-        </h1>
+    {% if is_granted("ROLE_ADMIN") %}
+        <h1>Bienvenue administrateur « {{ app.user.username }} »</h1>
+    {% elseif app.user %}
+        <h1>Bienvenue {{ app.user.username }}</h1>
     {% else %}
         <h1>
             Utilisateur non connecté

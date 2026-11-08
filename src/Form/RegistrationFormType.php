@@ -32,32 +32,32 @@ class RegistrationFormType extends AbstractType
                     "placeholder" => "Votre adresse e-mail",
                 ],
             ])
-            ->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'mapped' => false,
-                'invalid_message' => 'Les deux mots de passe doivent correspondre.',
-                'first_options' => [
-                    'label' => 'Mot de passe',
-                    'attr' => [
-                        'class' => 'form-control',
-                        'autocomplete' => 'new-password',
-                        'placeholder' => 'Votre mot de passe',
+            ->add("plainPassword", RepeatedType::class, [
+                "type" => PasswordType::class,
+                "mapped" => false,
+                "invalid_message" => "Les deux mots de passe doivent correspondre.",
+                "first_options" => [
+                    "label" => "Mot de passe",
+                    "attr" => [
+                        "class" => "form-control",
+                        "autocomplete" => "new-password",
+                        "placeholder" => "Votre mot de passe",
                     ],
                 ],
-                'second_options' => [
-                    'label' => 'Confirmer le mot de passe',
-                    'attr' => [
-                        'class' => 'form-control',
-                        'autocomplete' => 'new-password',
-                        'placeholder' => 'Confirmez votre mot de passe',
+                "second_options" => [
+                    "label" => "Confirmer le mot de passe",
+                    "attr" => [
+                        "class" => "form-control",
+                        "autocomplete" => "new-password",
+                        "placeholder" => "Confirmez votre mot de passe",
                     ],
                 ],
-                'constraints' => [
-                    new NotBlank(message: 'Veuillez saisir un mot de passe.'),
+                "constraints" => [
+                    new NotBlank(message: "Veuillez saisir un mot de passe."),
                     new Length(
                         min: 12,
                         max: 4096,
-                        minMessage: 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
+                        minMessage: "Votre mot de passe doit contenir au moins {{ limit }} caractères.",
                     ),
                 ],
             ]);
@@ -66,7 +66,7 @@ class RegistrationFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            "data_class" => User::class,
         ]);
     }
 }
