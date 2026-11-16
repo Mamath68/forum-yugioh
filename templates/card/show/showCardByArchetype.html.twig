@@ -7,8 +7,11 @@
         {% for card in cards %}
             {% set type = card.type %}
 
+            {% set routeParams = {type: card.type} %}
+
             {% if card.type == "Spell Card" or card.type == "Trap Card" %}
                 {% set type = card.race ~ " " ~ card.type %}
+                {% set routeParams = routeParams|merge({race: card.race}) %}
             {% endif %}
             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                 <div class="card h100 my-3">
@@ -22,7 +25,9 @@
                              title="{{ card.name }}">
                     </div>
                     <div class="card-footer">
-                        <h2 class="h5">{{ type }}</h2>
+                        <a href="{{ path('app_type', routeParams) }}">
+                            <h2 class="h5">{{ type }}</h2>
+                        </a>
                     </div>
                 </div>
             </div>

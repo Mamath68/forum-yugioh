@@ -13,7 +13,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 readonly class ApiService
 {
     private const string BASE_URL = "https://db.ygoprodeck.com/api/v7/";
-    private const string ENDPOINT_ALL = "cardinfo.php";
+    private const string ENDPOINT_ALL = "cardinfo.php?misc=yes";
     private const string ENDPOINT_RANDOM = "randomcard.php";
 
     private const array CARD_TYPES = [
@@ -175,7 +175,6 @@ readonly class ApiService
             $query = array_replace([
                 "num" => 1,
                 "offset" => 0,
-                "language"=> "fr"
             ], $params);
 
             $data = $this->request(self::ENDPOINT_ALL, $query);
@@ -195,9 +194,7 @@ readonly class ApiService
      */
     public function getRandomCard(): array
     {
-        return $this->request(self::ENDPOINT_RANDOM, [
-            "language"=> "fr"
-        ]);
+        return $this->request(self::ENDPOINT_RANDOM);
 
     }
 
@@ -211,8 +208,7 @@ readonly class ApiService
     public function getCardById(int $id): array
     {
         return $this->request(self::ENDPOINT_ALL, [
-            "id" => $id,
-            "language"=> "fr"
+            "id" => $id
         ]);
     }
 
@@ -271,6 +267,7 @@ readonly class ApiService
             "atk" => $atk,
         ]);
     }
+
     /**
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface

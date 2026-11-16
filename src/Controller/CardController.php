@@ -5,6 +5,7 @@ namespace App\Controller;
 use AllowDynamicProperties;
 use App\Service\ApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -184,6 +185,52 @@ final class CardController extends AbstractController
         return $this->render("card/show/showCardByAttribute.html.twig", [
             "title" => "Attribut : " . $attribute,
             "cards" => $data["data"],
+        ]);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    #[Route("/race/{race}", name: "app_race"
+    )]
+    public function getCardsByRace(string $race): Response
+    {
+        $data = $this->apiService->getCardsByRace($race);
+
+        return $this->render("card/show/showCardByRace.html.twig", [
+            "title" => "Race : " . $race,
+            "cards" => $data["data"],
+        ]);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    #[Route('/type/{type}', name: 'app_type')]
+    public function getCardsByType(
+        string $type,
+        Request $request,
+        ApiService $apiService
+    ): Response {
+        $race = $request->query->get('race');
+
+        if ($race !== null) {
+            $data = $apiService->getCardsByRaceType($race, $type);
+        } else {
+            $data = $apiService->getCardsByType($type);
+        }
+
+        return $this->render('card/show/showCardByType.html.twig', [
+            'title' => $race ? "$race $type" : $type,
+            'cards' => $data['data'],
         ]);
     }
 }

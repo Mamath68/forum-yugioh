@@ -3,6 +3,12 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
+    {% set type = card.type %}
+    {% set routeParams = {type: card.type} %}
+    {% if card.type == "Spell Card" or card.type == "Trap Card" %}
+        {% set type = card.race ~ " " ~ card.type %}
+        {% set routeParams = routeParams|merge({race: card.race}) %}
+    {% endif %}
     <h1>{{ card.name }}</h1>
     {% if card.type == "Link Monster" %}
         <a class="h5" href="{{ path("app_link", {linkval: card.linkval}) }}">Lien: {{ card.linkval }}</a>
@@ -18,12 +24,52 @@
         <a class="h5" href="{{ path("app_def", {def: card.def}) }}">Défense: {{ card.def }}</a>
     {% endif %}
     {% if card.archetype is defined %}
-        <a class="h5" href="{{ path("app_archetype", {archetype: card.archetype}) }}">Archétype: {{ card.archetype }}</a>
+        <a class="h5"
+           href="{{ path("app_archetype", {archetype: card.archetype}) }}">Archétype: {{ card.archetype }}</a>
     {% endif %}
     {% if card.attribute is defined %}
         <a class="h5" href="{{ path("app_attribute", {attribute: card.attribute}) }}">Attribut: {{ card.attribute }}</a>
     {% endif %}
+    <a href="{{ path('app_type', routeParams) }}">
+        <h2 class="h5">Type: {{ type }}</h2>
+    </a>
+    <a class="h5" href="{{ path("app_race", {race: card.race}) }}">Race: {{ card.race }}</a>
     <img src="{{ card.card_images[0].image_url }}" alt="{{ card.name }}" title="{{ card.name }}">
-    <p>{{ card.desc }}</p>
+    {% if "Pendulum" in card.type %}
+        <h4>Effet Pendule</h4>
+        <p>{{ card.pend_desc }}</p>
+        <h4>Text/Effet de monstre</h4>
+        <p>{{ card.monster_desc }}</p>
+    {% elseif "Monster" in card.type %}
+        <h4>Text/Effet de carte</h4>
+        <p>{{ card.desc }}</p>
+    {% endif %}
+    <p>
+        {{ card.card_prices[0].cardmarket_price }}
+    </p>
+    <p>
+        {{ card.card_prices[0].tcgplayer_price }}
+    </p>
+    <p>
+        {{ card.card_prices[0].ebay_price }}
+    </p>
+    <p>
+        {{ card.card_prices[0].amazon_price }}
+    </p>
+    {% if card.misc_info is defined and card.misc_info is not empty %}
+        {% set misc = card.misc_info[0] %}
+
+        <h3>Informations complémentaires</h3>
+
+        <p>Vues : {{ misc.views }}</p>
+        <p>Vues cette semaine : {{ misc.viewsweek }}</p>
+        <p>Rareté Master Duel : {{ misc.md_rarity ?? 'Inconnue' }}</p>
+
+        <h4>Formats disponibles</h4>
+
+        {% for format in misc.formats %}
+            <span class="badge bg-secondary mb-3">{{ format }}</span>
+        {% endfor %}
+    {% endif %}
 
 {% endblock %}

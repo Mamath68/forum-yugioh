@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class RegistrationFormType extends AbstractType
 {
@@ -35,6 +36,7 @@ class RegistrationFormType extends AbstractType
             ->add("plainPassword", RepeatedType::class, [
                 "type" => PasswordType::class,
                 "mapped" => false,
+                "required" => !$options["is_edit"],
                 "invalid_message" => "Les deux mots de passe doivent correspondre.",
                 "first_options" => [
                     "label" => "Mot de passe",
@@ -52,14 +54,21 @@ class RegistrationFormType extends AbstractType
                         "placeholder" => "Confirmez votre mot de passe",
                     ],
                 ],
-                "constraints" => [
-                    new NotBlank(message: "Veuillez saisir un mot de passe."),
-                    new Length(
-                        min: 12,
-                        max: 4096,
-                        minMessage: "Votre mot de passe doit contenir au moins {{ limit }} caractères.",
-                    ),
-                ],
+                "constraints" => $options["is_edit"]
+                    ? [
+                        new Regex(
+                            pattern: '/^(?:.{12,})?$/s',
+                            message: "Votre mot de passe doit contenir au moins 12 caractères."
+                        ),
+                    ]
+                    : [
+                        new NotBlank(message: "Veuillez saisir un mot de passe."),
+                        new Length(
+                            min: 12,
+                            max: 4096,
+                            minMessage: "Votre mot de passe doit contenir au moins {{ limit }} caractères."
+                        ),
+                    ],
             ]);
     }
 
@@ -67,6 +76,7 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => User::class,
+            "is_edit" => false,
         ]);
     }
 }
