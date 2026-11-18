@@ -9,67 +9,243 @@
         {% set type = card.race ~ " " ~ card.type %}
         {% set routeParams = routeParams|merge({race: card.race}) %}
     {% endif %}
-    <h1>{{ card.name }}</h1>
-    {% if card.type == "Link Monster" %}
-        <a class="h5" href="{{ path("app_link", {linkval: card.linkval}) }}">Lien: {{ card.linkval }}</a>
-        <a class="h5" href="{{ path("app_atk", {atk: card.atk}) }}">Attaque: {{ card.atk }}</a>
-    {% elseif "Pendulum" in card.type %}
-        <a class="h5" href="{{ path("app_scale", {scale: card.scale}) }}">Echelle Pendule: {{ card.scale }}</a>
-        <a class="h5" href="{{ path("app_level", {level: card.level}) }}">Niveau: {{ card.level }}</a>
-        <a class="h5" href="{{ path("app_atk", {atk: card.atk}) }}">Attaque: {{ card.atk }}</a>
-        <a class="h5" href="{{ path("app_def", {def: card.def}) }}">Défense: {{ card.def }}</a>
-    {% elseif "Monster" in card.type %}
-        <a class="h5" href="{{ path("app_level", {level: card.level}) }}">Niveau: {{ card.level }}</a>
-        <a class="h5" href="{{ path("app_atk", {atk: card.atk}) }}">Attaque: {{ card.atk }}</a>
-        <a class="h5" href="{{ path("app_def", {def: card.def}) }}">Défense: {{ card.def }}</a>
-    {% endif %}
-    {% if card.archetype is defined %}
-        <a class="h5"
-           href="{{ path("app_archetype", {archetype: card.archetype}) }}">Archétype: {{ card.archetype }}</a>
-    {% endif %}
-    {% if card.attribute is defined %}
-        <a class="h5" href="{{ path("app_attribute", {attribute: card.attribute}) }}">Attribut: {{ card.attribute }}</a>
-    {% endif %}
-    <a href="{{ path('app_type', routeParams) }}">
-        <h2 class="h5">Type: {{ type }}</h2>
-    </a>
-    <a class="h5" href="{{ path("app_race", {race: card.race}) }}">Race: {{ card.race }}</a>
-    <img src="{{ card.card_images[0].image_url }}" alt="{{ card.name }}" title="{{ card.name }}">
-    {% if "Pendulum" in card.type %}
-        <h4>Effet Pendule</h4>
-        <p>{{ card.pend_desc }}</p>
-        <h4>Text/Effet de monstre</h4>
-        <p>{{ card.monster_desc }}</p>
-    {% elseif "Monster" in card.type %}
-        <h4>Text/Effet de carte</h4>
-        <p>{{ card.desc }}</p>
-    {% endif %}
-    <p>
-        {{ card.card_prices[0].cardmarket_price }}
-    </p>
-    <p>
-        {{ card.card_prices[0].tcgplayer_price }}
-    </p>
-    <p>
-        {{ card.card_prices[0].ebay_price }}
-    </p>
-    <p>
-        {{ card.card_prices[0].amazon_price }}
-    </p>
     {% if card.misc_info is defined and card.misc_info is not empty %}
         {% set misc = card.misc_info[0] %}
-
-        <h3>Informations complémentaires</h3>
-
-        <p>Vues : {{ misc.views }}</p>
-        <p>Vues cette semaine : {{ misc.viewsweek }}</p>
-        <p>Rareté Master Duel : {{ misc.md_rarity ?? 'Inconnue' }}</p>
-
-        <h4>Formats disponibles</h4>
-
-        {% for format in misc.formats %}
-            <span class="badge bg-secondary mb-3">{{ format }}</span>
-        {% endfor %}
     {% endif %}
+    {% set shop_names = {
+        'cardmarket_price': 'Cardmarket',
+        'tcgplayer_price': 'TCGplayer',
+        'ebay_price': 'eBay',
+        'amazon_price': 'Amazon',
+        'coolstuffinc_price': 'CoolStuffInc'
+    } %}
 
+    <main role="main" class="flex-shrink-0">
+        <div class="container">
+
+            <!-- Card Info -->
+            <div class="card-area" style="min-height: 410px;">
+                <div class="column1">
+                    <div class="card-image">
+                        <figure>
+                            <img id="card-artwork" class="zoom" alt="{{ card.name }}"
+                                 src="https://images.ygoprodeck.com/images/cards/{{ card.id }}.jpg"
+                                 title="{{ card.name }}" loading="lazy">
+                            <figcaption>
+
+                                <div class="format-row-grid">
+                                    {% for format in misc.formats %}
+                                        <span class="format-row"
+                                              title="LEGAL dans le Format {{ format }}">{{ format }}</span>
+                                    {% endfor %}
+                                </div>
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+
+                <div class="column2 card-hero-details">
+                    <div class="card-hero-top">
+                        <div>
+                            <div class="card-name"><h1>{{ card.name }}</h1></div>
+                            <div class="resources-bar card-view-stats">
+                                <span><i class="fa-solid fa-eye"></i> {{ misc.views }} vues</span>
+                                <span><i
+                                        class="fa-solid fa-calendar-week"></i> {{ misc.viewsweek }} vues cette semaine</span>
+                            </div>
+                        </div>
+                        {#
+                        <div class="resources-bar card-language-bar" aria-label="Language options">
+                            <span class="resources-lang-icon"><button type="button" class="btn btn-primary btn-sm"
+                                                                      onclick="if (!window.__cfRLUnblockHandlers) return false; getLanguage('en')">EN</button></span>
+                            <span class="resources-lang-icon"><button type="button" class="btn btn-primary btn-sm"
+                                                                      onclick="if (!window.__cfRLUnblockHandlers) return false; getLanguage('fr')">FR</button></span>
+                            <span class="resources-lang-icon"><button type="button" class="btn btn-primary btn-sm"
+                                                                      onclick="if (!window.__cfRLUnblockHandlers) return false; getLanguage('de')">DE</button></span>
+                            <span class="resources-lang-icon"><button type="button" class="btn btn-primary btn-sm"
+                                                                      onclick="if (!window.__cfRLUnblockHandlers) return false; getLanguage('it')">IT</button></span>
+                            <span class="resources-lang-icon"><button type="button" class="btn btn-primary btn-sm"
+                                                                      onclick="if (!window.__cfRLUnblockHandlers) return false; getLanguage('pt')">PT</button></span>
+                            <span class="resources-lang-icon"><button type="button" class="btn btn-primary btn-sm"
+                                                                      onclick="if (!window.__cfRLUnblockHandlers) return false; getLanguage('ko')">KO</button></span>
+                            <span class="resources-lang-icon"><button type="button" class="btn btn-primary btn-sm"
+                                                                      onclick="if (!window.__cfRLUnblockHandlers) return false; getLanguage('ja')">JA</button></span>
+                        </div>
+                        #}
+                    </div>
+
+                    <ul class="card-data-info">
+                        <li>
+                            <span class="card-data-header">Type</span>
+                            <span class="card-data-cost card-data-subheader">
+                                <i class="fa-solid fa-book"></i>
+                                <a href="{{ path('app_type', routeParams) }}">{{ type }}</a>
+                            </span>
+                        </li>
+                        {% if card.attribute is defined %}
+                            <li>
+                                <span class="card-data-header">Attribute</span>
+                                <span class="card-data-cost card-data-subheader">
+                                    <img class="card-typing-icon"
+                                         src="https://images.ygoprodeck.com/images/cards/{{ card.attribute }}.jpg"
+                                         alt="{{ card.attribute }}" title="{{ card.attribute }}" loading="lazy">
+                                    <a href="{{ path("app_attribute", {attribute: card.attribute}) }}">{{ card.attribute }}</a>
+                                </span>
+                            </li>
+                        {% endif %}
+                        {% if "Monster" in card.type %}
+                            <li>
+                                <span class="card-data-header">Typing</span>
+                                <span class="card-data-cost card-data-subheader">
+                                    <img class="card-typing-icon"
+                                         src="https://images.ygoprodeck.com/images/cards/icons/race/{{ card.race }}.png"
+                                         alt="{{ card.race }}" title="{{ card.race }}" loading="lazy">
+                                    <a href="{{ path("app_race", {race: card.race}) }}">{{ card.race }}</a>
+                                </span>
+                            </li>
+                        {% endif %}
+                        {% if card.type == "Link Monster" %}
+                            <li>
+                                <span class="card-data-header">Lien</span>
+                                <span class="card-data-cost card-data-subheader">
+                                    <img class="card-typing-icon"
+                                         src="https://ygoprodeck.com/wp-content/uploads/2017/01/level.png"
+                                         alt="{{ card.linkval }}" title="{{ card.linkval }}" loading="lazy">
+                                    <a href="{{ path("app_link", {linkval: card.linkval}) }}">{{ card.linkval }}</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="card-data-header">ATK</span>
+                                <span class="card-data-cost card-data-subheader">
+                                    <i class="fa-solid fa-swords" title="{{ card.atk }}"></i>
+                                    <a href="{{ path("app_atk", {atk: card.atk}) }}">{{ card.atk }}</a>
+                                </span>
+                            </li>
+                        {% elseif "Pendulum" in card.type %}
+                            <li>
+                                <span class="card-data-header">Echelle Pendule</span>
+                                <span class="card-data-cost card-data-subheader">
+                                    <img class="card-typing-icon"
+                                         src="https://tse3.mm.bing.net/th/id/OIP.MPz-YNNpHbsUsiKBPvr2tAHaCg?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+                                         alt="{{ card.scale }}" title="{{ card.scale }}" loading="lazy">
+                                    <a href="{{ path("app_scale", {scale: card.scale}) }}">{{ card.scale }}</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="card-data-header">Level/Rank</span>
+                                <span class="card-data-cost card-data-subheader">
+                                    <img class="card-typing-icon"
+                                         src="https://ygoprodeck.com/wp-content/uploads/2017/01/level.png"
+                                         alt="{{ card.level }}" title="{{ card.level }}" loading="lazy">
+                                    <a href="{{ path("app_level", {level: card.level}) }}">{{ card.level }}</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="card-data-header">ATK</span>
+                                <span class="card-data-cost card-data-subheader">
+                                <i class="fa-solid fa-swords" title="{{ card.atk }}"></i>
+                                <a href="{{ path("app_atk", {atk: card.atk}) }}">{{ card.atk }}</a>
+                            </span>
+                            </li>
+                            <li>
+                                <span class="card-data-header">DEF</span>
+                                <span class="card-data-cost card-data-subheader">
+                                <i class="fa-solid fa-shield" title="{{ card.def }}"></i>
+                                <a href="{{ path("app_def", {def: card.def}) }}">{{ card.def }}</a>
+                            </span>
+                            </li>
+                        {% elseif "Monster" in card.type %}
+                            <li>
+                                <span class="card-data-header">Level/Rank</span>
+                                <span class="card-data-cost card-data-subheader">
+                                <img class="card-typing-icon"
+                                     src="https://ygoprodeck.com/wp-content/uploads/2017/01/level.png"
+                                     alt="{{ card.level }}" title="{{ card.level }}" loading="lazy">
+                                <a href="{{ path("app_level", {level: card.level}) }}">{{ card.level }}</a>
+                            </span>
+                            </li>
+                            <li>
+                                <span class="card-data-header">ATK</span>
+                                <span class="card-data-cost card-data-subheader">
+                                <i class="fa-solid fa-swords" title="{{ card.atk }}"></i>
+                                <a href="{{ path("app_atk", {atk: card.atk}) }}">{{ card.atk }}</a>
+                            </span>
+                            </li>
+                            <li>
+                                <span class="card-data-header">DEF</span>
+                                <span class="card-data-cost card-data-subheader">
+                                <i class="fa-solid fa-shield" title="{{ card.def }}"></i>
+                                <a href="{{ path("app_def", {def: card.def}) }}">{{ card.def }}</a>
+                            </span>
+
+                            </li>
+                        {% endif %}
+                        {% if card.archetype is defined %}
+                            <li>
+                                <span class="card-data-header">Archetype</span>
+                                <span
+                                    class="card-data-cost card-data-subheader"><i
+                                        class="fa-solid fa-flask-round-potion" title="{{ card.archetype }}"></i> <a
+                                        href="{{ path("app_archetype", {archetype: card.archetype}) }}">{{ card.archetype }}</a>
+                                </span>
+                            </li>
+                        {% endif %}
+
+                        <li>
+                            <span class="card-data-header">Pricing</span>
+                            {% for shop, price in card.card_prices[0] %}
+                                <span
+                                    class="card-data-cost card-data-subheader">
+                                 <i class="fa-solid fa-book"></i>
+                                    {{ shop_names[shop] ?? shop }} : {{ price }} €
+                            </span>
+                            {% endfor %}
+                        </li>
+                        {% if misc.tcg_date is defined %}
+                            <li>
+                                <span class="card-data-header">TCG Date</span><span
+                                    class="card-data-cost card-data-subheader"><i
+                                        class="fa-solid fa-calendar"></i> {{ misc.tcg_date }}</span>
+                            </li>
+                        {% else %}
+                            <li>
+                                <span class="card-data-header">TCG Date</span><span
+                                    class="card-data-cost card-data-subheader">
+                                    <i
+                                        class="fa-solid fa-calendar"></i> Not Released</span>
+                            </li>
+                        {% endif %}
+                        {% if misc.ocg_date is defined %}
+                            <li>
+                                <span class="card-data-header">OCG Date</span>
+                                <span
+                                    class="card-data-cost card-data-subheader"><i
+                                        class="fa-solid fa-calendar"></i> {{ misc.ocg_date }}</span>
+                            </li>
+                        {% else %}
+                            <li>
+                                <span class="card-data-header">TCG Date</span><span
+                                    class="card-data-cost card-data-subheader"><i
+                                        class="fa-solid fa-calendar"></i> Not Released</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    {% if "Pendulum" in card.type %}
+                        <h4>Pendulum Text</h4>
+                        <div class="card-text ">{{ card.pend_desc }}
+                        </div>
+                        <hr>
+                        <h4>Card Text</h4>
+                        <div class="card-text ">{{ card.monster_desc }}
+                        </div>
+                        <hr>
+                    {% else %}
+                        <h4>Card Text</h4>
+                        <div class="card-text ">{{ card.desc }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
 {% endblock %}

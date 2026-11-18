@@ -219,10 +219,12 @@ readonly class ApiService
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function getCardsByLevel(int $level): array
+    public function getCardsByLevel(int $level, int $num = 20, int $offset = 0): array
     {
         return $this->request(self::ENDPOINT_ALL, [
             "level" => $level,
+            'num' => $num,
+            'offset' => $offset,
         ]);
     }
 
@@ -233,10 +235,12 @@ readonly class ApiService
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function getCardsByLink(int $link): array
+    public function getCardsByLink(int $link, int $num = 20, int $offset = 0): array
     {
         return $this->request(self::ENDPOINT_ALL, [
             "link" => $link,
+            'num' => $num,
+            'offset' => $offset,
         ]);
     }
 
@@ -247,10 +251,12 @@ readonly class ApiService
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function getCardsByScale(int $scale): array
+    public function getCardsByScale(int $scale, int $num = 20, int $offset = 0): array
     {
         return $this->request(self::ENDPOINT_ALL, [
             "scale" => $scale,
+            'num' => $num,
+            'offset' => $offset,
         ]);
     }
 
@@ -261,10 +267,12 @@ readonly class ApiService
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function getCardsByAtk(int $atk): array
+    public function getCardsByAtk(int $atk, int $num = 20, int $offset = 0): array
     {
         return $this->request(self::ENDPOINT_ALL, [
             "atk" => $atk,
+            'num' => $num,
+            'offset' => $offset,
         ]);
     }
 
@@ -275,10 +283,12 @@ readonly class ApiService
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function getCardsByDef(int $def): array
+    public function getCardsByDef(int $def, int $num = 20, int $offset = 0): array
     {
         return $this->request(self::ENDPOINT_ALL, [
             "def" => $def,
+            'num' => $num,
+            'offset' => $offset,
         ]);
     }
 
@@ -289,10 +299,12 @@ readonly class ApiService
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function getCardsByArchetype(string $archetype): array
+    public function getCardsByArchetype(string $archetype, int $num = 20, int $offset = 0): array
     {
         return $this->request(self::ENDPOINT_ALL, [
             "archetype" => $archetype,
+            'num' => $num,
+            'offset' => $offset,
         ]);
     }
 
@@ -303,10 +315,12 @@ readonly class ApiService
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function getCardsByType(string $type): array
+    public function getCardsByType(string $type, int $num = 20, int $offset = 0): array
     {
         return $this->request(self::ENDPOINT_ALL, [
             "type" => $type,
+            'num' => $num,
+            'offset' => $offset,
         ]);
     }
 
@@ -317,10 +331,12 @@ readonly class ApiService
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function getCardsByRace(string $race): array
+    public function getCardsByRace(string $race, int $num = 20, int $offset = 0): array
     {
         return $this->request(self::ENDPOINT_ALL, [
             "race" => $race,
+            'num' => $num,
+            'offset' => $offset,
         ]);
     }
 
@@ -331,11 +347,13 @@ readonly class ApiService
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function getCardsByRaceType(string $race, string $type): array
+    public function getCardsByRaceType(string $race, string $type, int $num = 20, int $offset = 0): array
     {
         return $this->request(self::ENDPOINT_ALL, [
             "race" => $race,
             "type" => $type,
+            'num' => $num,
+            'offset' => $offset,
         ]);
     }
 
@@ -346,10 +364,12 @@ readonly class ApiService
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function getCardsByAttribute(string $attribute): array
+    public function getCardsByAttribute(string $attribute, int $num = 20, int $offset = 0): array
     {
         return $this->request(self::ENDPOINT_ALL, [
             "attribute" => $attribute,
+            'num' => $num,
+            'offset' => $offset,
         ]);
     }
 }

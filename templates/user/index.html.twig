@@ -1,35 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User index{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-    <h1>User index</h1>
+    <h1>Liste des utilisateurs</h1>
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>actions</th>
-            </tr>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for user in users %}
             <tr>
-                <td>{{ user.username }}</td>
+                <td>
+                    {{ user.username }}
+                    {% if app.user and user.id == app.user.id %}
+                        <span class="badge bg-primary">Vous</span>
+                    {% endif %}
+                </td>
                 <td>{{ user.email }}</td>
                 <td>
-                    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+                    <a class="btn btn-info" href="{{ path('app_user_show', {'id': user.id}) }}">Detail</a>
+                    <a class="btn btn-warning" href="{{ path('app_user_edit', {'id': user.id}) }}">Editer</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="6">Aucun Utilisateur inscrit</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_register') }}">Create new</a>
+    {# <a href="{{ path('app_register') }}">Create new</a #}
 {% endblock %}
